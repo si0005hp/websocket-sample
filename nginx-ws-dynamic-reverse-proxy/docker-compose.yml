@@ -1,0 +1,38 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - '80:80'
+      - '443:443'
+  selenium1:
+    build:
+      context: .
+      dockerfile: selenium/Dockerfile
+    ports:
+      - '35901:5900'
+      - '36901:6900'
+      - '30122:22'
+    environment:
+      - VNC_PASSWD=mypasswd
+  selenium2:
+    build:
+      context: .
+      dockerfile: selenium/Dockerfile
+    ports:
+      - '35902:5900'
+      - '36902:6900'
+      - '30222:22'
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - '18080:8080'
+      - '18081:8081'
+    volumes:
+      - ./client:/app:cached
+      - ./ssl:/app/ssl
+    command: yarn serves
